@@ -6,11 +6,7 @@ const {
   updateCommentReview,
   deleteReview,
 } = require("..//controllers/reviewsController");
-// const {
-//   validateBody,
-//   isValidId,
-//   authenticate,
-// } = require("..//middlewares");
+const { validateBody, isValidId, authenticate } = require("..//middlewares");
 const {
   createReviewSchema,
   updateReviewSchema,
