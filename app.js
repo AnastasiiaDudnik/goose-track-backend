@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const usersRouter = require("./routes/user");
 const tasksRouter = require("./routes/tasks");
+const reviewsRouter = require("./routes/reviews");
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.use(express.static("public"));
 
 app.use("/users", usersRouter);
 app.use("/tasks", tasksRouter);
+app.use("/reviews", reviewsRouter);
+
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
