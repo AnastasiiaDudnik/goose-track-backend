@@ -16,7 +16,10 @@ const getOwnerReview = controllerWrap(async (req, res) => {
   const { _id: owner } = req.user;
   const { page = 1, limit = 10 } = req.query;
   const skip = (page - 1) * limit;
-  const result = await Review.find({ owner }).limit(limit).skip(skip);
+  const result = await Review.find({ owner })
+    .populate("owner", "comment")
+    .limit(limit)
+    .skip(skip);
 
   if (!result) {
     throw HttpError(404);
