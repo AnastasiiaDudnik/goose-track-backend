@@ -20,6 +20,7 @@ const userSchema = new Schema({
     type: String,
     unique: true,
     default: null,
+    sparse: true,
   },
   birthday: {
     type: Date,
@@ -27,7 +28,9 @@ const userSchema = new Schema({
   },
   skype: {
     type: String,
+    unique: true,
     default: null,
+    sparse: true,
   },
   avatarURL: String,
   accessToken: String,
