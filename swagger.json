@@ -12,7 +12,7 @@
   "consumes": ["application/json, multipart/form-data"],
   "produces": ["application/json"],
   "servers": [
-    { "url": "https://project-backend-31xl.onrender.com/" },
+    { "url": "https://goose-calendar.onrender.com/" },
     { "url": "http://localhost:3001" }
   ],
   "tags": [
