@@ -122,8 +122,9 @@ const getCurrent = async (req, res) => {
   });
 };
 
-const updateAvatar = async (req, res) => {
+const update = async (req, res) => {
   const { _id } = req.user;
+  const { name, email, phone, skype, birthday } = req.body;
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarPath, filename);
   await fs.rename(oldPath, newPath);
@@ -153,6 +154,6 @@ module.exports = {
   login: controllerWrap(login),
   refresh: controllerWrap(refresh),
   getCurrent: controllerWrap(getCurrent),
-  updateAvatar: controllerWrap(updateAvatar),
+  update: controllerWrap(update),
   logout: controllerWrap(logout),
 };
