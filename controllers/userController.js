@@ -7,12 +7,10 @@ const gravatar = require("gravatar");
 
 const User = require("../models/user");
 
-const { HttpError } = require("../helpers");
+const { HttpError, cloudinary } = require("../helpers");
 const { controllerWrap } = require("../decorators");
 
 const { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY } = process.env;
-
-const avatarPath = path.resolve("public", "avatars");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -124,21 +122,39 @@ const getCurrent = async (req, res) => {
 
 const update = async (req, res) => {
   const { _id } = req.user;
-  const { name, email, phone, skype, birthday } = req.body;
-  const { path: oldPath, filename } = req.file;
-  const newPath = path.join(avatarPath, filename);
-  await fs.rename(oldPath, newPath);
-  const avatar = path.join("movies", filename);
+  const { avatarURL, name, email, phone, skype, birthday } = req.body;
+  const { path: oldPath } = req.file;
+  const fileData = cloudinary.uploader.upload(oldPath, {
+    folder: "avatar",
+  });
+  await fs.unlink(oldPath);
 
-  const result = await User.findByIdAndUpdate(
-    _id,
-    { avatarURL: avatar },
-    {
-      new: true,
-    }
-  );
+  const fieldsToUpdate = {};
 
-  res.json({ avatarURL: result.avatarURL });
+  if (avatarURL) {
+    fieldsToUpdate.avatarURL = fileData.url;
+  }
+  if (name) {
+    fieldsToUpdate.name = name;
+  }
+  if (email) {
+    fieldsToUpdate.email = email;
+  }
+  if (phone) {
+    fieldsToUpdate.phone = phone;
+  }
+  if (skype) {
+    fieldsToUpdate.skype = skype;
+  }
+  if (birthday) {
+    fieldsToUpdate.birthday = birthday;
+  }
+
+  const result = await User.findByIdAndUpdate(_id, fieldsToUpdate, {
+    new: true,
+  });
+
+  res.json({ result });
 };
 
 const logout = async (req, res) => {
