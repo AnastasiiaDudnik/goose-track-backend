@@ -7,7 +7,7 @@ const {
   login,
   refresh,
   getCurrent,
-  updateAvatar,
+  update,
   logout,
 } = require("../controllers/userController");
 
@@ -29,12 +29,7 @@ router.post("./refresh", validate(refreshSchema), refresh);
 
 router.get("/current", authenticate, getCurrent);
 
-router.patch(
-  "/avatars",
-  upload.single("avatarURL"),
-  authenticate,
-  updateAvatar
-);
+router.patch("/update", upload.single("avatarURL"), authenticate, update);
 
 router.post("/logout", authenticate, logout);
 
