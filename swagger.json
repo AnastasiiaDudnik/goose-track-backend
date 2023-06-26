@@ -65,6 +65,41 @@
       }
     },
 
+    "/users/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Login user",
+        "parameters": [],
+        "requestBody": {
+          "description": "Login object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User is logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Email or password is wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+
     "/reviews": {
       "get": {
         "tags": ["Reviews"],
@@ -139,7 +174,10 @@
                 "description": "User's email",
                 "format": "email"
               },
-              "avatarURL": { "type": "string", "description": "User's vatar path" }
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar path"
+              }
             }
           }
         },
@@ -152,6 +190,85 @@
             "name": "Bogdan",
             "email": "bogdan@gmail.com",
             "avatarURL": "http://www.gravatar.com/2a06849295a6965ddd313b186672c523.json"
+          }
+        }
+      },
+
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "bogdan@gmail.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refreshToken"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User's id"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar path"
+              },
+              "phone": {
+                "type": "string",
+                "description": "User's phone"
+              },
+              "birthday": {
+                "type": "data",
+                "description": "User's birthday"
+              },
+              "skype": {
+                "type": "string",
+                "description": "User's skype"
+              }
+            }
+          }
+        },
+
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTkxZTYxZDAzMzcxMDkxNmFhOGYwNCIsImlhdCI6MTY4Nzc3NzgwNSwiZXhwIjoxNjg3Nzc3OTg1fQ.W11Xu3iPwMJA6wFPVtzGu0FNm9k6J7Oly66Tzr0prvQ",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTkxZTYxZDAzMzcxMDkxNmFhOGYwNCIsImlhdCI6MTY4Nzc3NzgwNSwiZXhwIjoxNjg4MzgyNjA1fQ.PRmSgMscQpP4ZAQSyFExJsqP3OUrLjqmY98sYmllmS8",
+          "user": {
+            "id": "64991e61d033710916aa8f04",
+            "name": "Bogdan",
+            "email": "bogdan5@gmail.com",
+            "avatarURL": "http://www.gravatar.com/a6939c71c641cabbce2b6fe6d6c0ada2.json",
+            "phone": null,
+            "birthday": null,
+            "skype": null
           }
         }
       },
