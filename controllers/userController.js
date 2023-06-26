@@ -79,7 +79,13 @@ const login = async (req, res) => {
     token: accessToken,
     refreshToken,
     user: {
+      id: user.id,
+      name: user.name,
       email: user.email,
+      avatarURL: user.avatarURL,
+      phone: user.phone,
+      birthday: user.birthday,
+      skype: user.skype,
     },
   });
 };
