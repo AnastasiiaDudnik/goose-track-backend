@@ -99,6 +99,45 @@
         }
       }
     },
+    "/users/logout": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Log out user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Logout is successed"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get information about the current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Information found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        }
+      }
+    },
 
     "/reviews": {
       "get": {
@@ -272,6 +311,50 @@
           }
         }
       },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User's id"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar path"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone"
+          },
+          "birthday": {
+            "type": "data",
+            "description": "User's birthday"
+          },
+          "skype": {
+            "type": "string",
+            "description": "User's skype"
+          }
+        },
+
+        "example": {
+          "id": "64983b139dd09fca9aaa6da4",
+          "name": "Bogdan",
+          "email": "bogdan@gmail.com",
+          "avatarURL": "http://www.gravatar.com/c30d6c14569650b95a78e33e5013683e.json",
+          "phone": null,
+          "birthday": null,
+          "skype": null
+        }
+      },
 
       "ReviewsResponse": {
         "type": "array",
@@ -297,6 +380,15 @@
         ]
       }
     },
-    "securitySchemes": {}
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Bearer token to access these api endpoints"
+      }
+    }
   }
 }
