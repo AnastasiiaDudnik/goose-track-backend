@@ -1,0 +1,302 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger GooseTrack",
+    "description": "Цей проект є веб-додатком для керування особистими справами.",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json, multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [
+    { "url": "https://goose-calendar.onrender.com/" },
+    { "url": "http://localhost:3001" }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User endpoints"
+    },
+    {
+      "name": "Reviews",
+      "description": "Reviews endpoints"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["User"],
+        "summary": "User registration",
+        "parameters": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Email already in use",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/users/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Login user",
+        "parameters": [],
+        "requestBody": {
+          "description": "Login object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User is logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Email or password is wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/reviews": {
+      "get": {
+        "tags": ["Reviews"],
+        "summary": "Get all reviews",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Reviews collection found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bogdan"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "bogdan@gmail.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refreshToken"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User's id"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar path"
+              }
+            }
+          }
+        },
+
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4NzY5ODE5NSwiZXhwIjoxNjg3Njk4Mzc1fQ.P3ZWu3PzRpMyuT6ngche4ojbYizBvnOOnTSqniABkhQ",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4NzY5ODE5NSwiZXhwIjoxNjg4MzAyOTk1fQ.Dycs8it1fF4WRFYiqV-0DDlZ3v_YRBTw6ThrOd5wx2A",
+          "user": {
+            "id": "64983b139dd09fca9aaa6da4",
+            "name": "Bogdan",
+            "email": "bogdan@gmail.com",
+            "avatarURL": "http://www.gravatar.com/2a06849295a6965ddd313b186672c523.json"
+          }
+        }
+      },
+
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "bogdan@gmail.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refreshToken"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User's id"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar path"
+              },
+              "phone": {
+                "type": "string",
+                "description": "User's phone"
+              },
+              "birthday": {
+                "type": "data",
+                "description": "User's birthday"
+              },
+              "skype": {
+                "type": "string",
+                "description": "User's skype"
+              }
+            }
+          }
+        },
+
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4Nzc4NTk5MCwiZXhwIjoxNjg3Nzg2MTcwfQ.pDaxG-bCwh654H34GaqIDe6oByCLavaMCLN9o98X-5M",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4Nzc4NTk5MCwiZXhwIjoxNjg4MzkwNzkwfQ.cUytD86J8B87cpas7O1mNvSPciSKAc7zcnPRd23p9zs",
+          "user": {
+            "id": "64983b139dd09fca9aaa6da4",
+            "name": "Bogdan",
+            "email": "bogdan@gmail.com",
+            "avatarURL": "http://www.gravatar.com/c30d6c14569650b95a78e33e5013683e.json",
+            "phone": null,
+            "birthday": null,
+            "skype": null
+          }
+        }
+      },
+
+      "ReviewsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "owner": {
+              "type": "string",
+              "description": "Owner name"
+            },
+            "name comment": {
+              "type": "string",
+              "description": "Owner comment"
+            }
+          }
+        },
+        "example": [
+          {
+            "owner": "Kateryna Hilcher",
+            "comment": "Really helps to plan the day."
+          },
+          { "owner": "Mykola Kapytaniuk", "comment": "Very cool app." }
+        ]
+      }
+    },
+    "securitySchemes": {}
+  }
+}
