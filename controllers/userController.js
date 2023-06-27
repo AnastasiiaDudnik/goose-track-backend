@@ -33,7 +33,7 @@ const register = async (req, res) => {
     id: newUser._id,
   };
 
-  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "3m" });
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1h" });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   });
@@ -70,7 +70,9 @@ const login = async (req, res) => {
   };
 
   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-    expiresIn: "24h",
+
+    expiresIn: "1h",
+
   });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
     expiresIn: "7d",
@@ -106,7 +108,7 @@ const refresh = async (req, res) => {
     };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: "3m",
+      expiresIn: "1h",
     });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
       expiresIn: "7d",
@@ -122,11 +124,16 @@ const refresh = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { name, email } = req.user;
+  const { id, name, email, avatarURL, phone, birthday, skype } = req.user;
 
   res.json({
+    id,
     name,
     email,
+    avatarURL,
+    phone,
+    birthday,
+    skype,
   });
 };
 
