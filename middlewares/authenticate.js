@@ -16,7 +16,6 @@ const authenticate = async (req, res, next) => {
 
   try {
     const { id } = jwt.verify(token, ACCESS_SECRET_KEY);
-    console.log(id);
     const user = await User.findById(id);
 
     if (!user || !user.accessToken || user.accessToken !== token) {

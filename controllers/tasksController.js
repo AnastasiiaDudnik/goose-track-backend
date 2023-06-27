@@ -28,41 +28,44 @@ const addTask = async (req, res) => {
     res.status(201).json(task);
 };
 
-//отримання GET /tasks/:taskId 
+//отримання GET /tasks/:id 
 const getTaskById = async (req, res) => {
-    const { taskId } = req.params;
+    const { id } = req.params;
+    const { _id: owner } = req.user;
 
-    const task = await Tasks.findById(taskId);
+    const task = await Tasks.findOne({_id: id, owner });
 
     if (!task) {
-        throw new HttpError(404, `Task with "${taskId}" not found`);
+        throw new HttpError(404, `Task with "${id}" not found`);
     }
     res.json(task);
 };
 
-//редагування PATCH /tasks/:taskId
+//редагування PATCH /tasks/:id
 const updateTask = async (req, res) => {
-    const { taskId } = req.params;
+    const { id } = req.params;
+    const { _id: owner } = req.user;
 
-    const task = await Tasks.findByIdAndUpdate(taskId, req.body, {
+    const task = await Tasks.findOneAndUpdate({_id: id, owner }, req.body, {
         new: true,
     });
 
     if (!task) {
-        throw new HttpError(404, `Contact with ${taskId} not found`);
+        throw new HttpError(404, `Contact with ${id} not found`);
     }
 
     res.json(task);
 };
 
-//видалення DELETE /tasks/:taskId
+//видалення DELETE /tasks/:id
 const removeTask = async (req, res) => {
-    const { taskId } = req.params;
+    const { id } = req.params;
+    const { _id: owner } = req.user;
 
-    const removedTask = await Tasks.findByIdAndRemove(taskId);
+    const removedTask = await Tasks.findOneAndDelete({_id: id, owner });
 
     if (!removedTask) {
-        throw new HttpError(404, `Task with "${taskId}" not found`);
+        throw new HttpError(404, `Task with "${id}" not found`);
     }
 
     res.json({ message: "Task deleted" });

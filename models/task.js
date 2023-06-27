@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 const dateRegexp = /(19|20)\d\d-((0[1-9]|1[012])-(0[1-9]|[12]\d)|(0[13-9]|1[012])-30|(0[13578]|1[02])-31)/; //yyyy-mm-dd
-const timeRegexp = null; //hh-mm
+const timeRegexp = /\d\d[-:]\d\d/g; //hh-mm
 
 const categoryType = ["to-do", "in-progress", "done"];
 const priorityType = ["low", "medium", "high"];

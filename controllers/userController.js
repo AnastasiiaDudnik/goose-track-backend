@@ -70,7 +70,7 @@ const login = async (req, res) => {
   };
 
   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-    expiresIn: "3m",
+    expiresIn: "24h",
   });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
     expiresIn: "7d",
