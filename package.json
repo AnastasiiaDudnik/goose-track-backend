@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/AnastasiiaDudnik/goose-track-backend#readme",
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.37.2",
     "cors": "^2.8.5",

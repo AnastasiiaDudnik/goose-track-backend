@@ -130,7 +130,7 @@ const update = async (req, res) => {
   const { _id } = req.user;
   const { avatarURL, name, email, phone, skype, birthday } = req.body;
   const { path: oldPath } = req.file;
-  const fileData = cloudinary.uploader.upload(oldPath, {
+  const fileData = await cloudinary.uploader.upload(oldPath, {
     folder: "avatar",
   });
   await fs.unlink(oldPath);
@@ -160,7 +160,7 @@ const update = async (req, res) => {
     new: true,
   });
 
-  res.json({ result });
+  res.json(result);
 };
 
 const logout = async (req, res) => {
