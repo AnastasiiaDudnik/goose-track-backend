@@ -55,9 +55,13 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  const comparePassword = bcrypt.compare(password, user.password);
 
-  if (!user || !comparePassword) {
+  if (!user) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+
+  const comparePassword = await bcrypt.compare(password, user.password);
+  if (!comparePassword) {
     throw HttpError(401, "Email or password is wrong");
   }
 
@@ -168,7 +172,7 @@ const logout = async (req, res) => {
 
   await User.findByIdAndUpdate(_id, { accessToken: "", refreshToken: "" });
 
-  res.status(204);
+  res.status(204).json({ message: "Logout is successed" });
 };
 
 module.exports = {
