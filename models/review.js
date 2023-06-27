@@ -6,6 +6,11 @@ const reviewSchema = new Schema(
       type: String,
       required: true,
     },
+    rating: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
     comment: {
       type: String,
       default: "",
