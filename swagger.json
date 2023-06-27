@@ -259,13 +259,13 @@
         },
 
         "example": {
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTkxZTYxZDAzMzcxMDkxNmFhOGYwNCIsImlhdCI6MTY4Nzc3NzgwNSwiZXhwIjoxNjg3Nzc3OTg1fQ.W11Xu3iPwMJA6wFPVtzGu0FNm9k6J7Oly66Tzr0prvQ",
-          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTkxZTYxZDAzMzcxMDkxNmFhOGYwNCIsImlhdCI6MTY4Nzc3NzgwNSwiZXhwIjoxNjg4MzgyNjA1fQ.PRmSgMscQpP4ZAQSyFExJsqP3OUrLjqmY98sYmllmS8",
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4Nzc4NTk5MCwiZXhwIjoxNjg3Nzg2MTcwfQ.pDaxG-bCwh654H34GaqIDe6oByCLavaMCLN9o98X-5M",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4Nzc4NTk5MCwiZXhwIjoxNjg4MzkwNzkwfQ.cUytD86J8B87cpas7O1mNvSPciSKAc7zcnPRd23p9zs",
           "user": {
-            "id": "64991e61d033710916aa8f04",
+            "id": "64983b139dd09fca9aaa6da4",
             "name": "Bogdan",
-            "email": "bogdan5@gmail.com",
-            "avatarURL": "http://www.gravatar.com/a6939c71c641cabbce2b6fe6d6c0ada2.json",
+            "email": "bogdan@gmail.com",
+            "avatarURL": "http://www.gravatar.com/c30d6c14569650b95a78e33e5013683e.json",
             "phone": null,
             "birthday": null,
             "skype": null
