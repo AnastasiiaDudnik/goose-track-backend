@@ -122,11 +122,16 @@ const refresh = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { name, email } = req.user;
+  const { id, name, email, avatarURL, phone, birthday, skype } = req.user;
 
   res.json({
+    id,
     name,
     email,
+    avatarURL,
+    phone,
+    birthday,
+    skype,
   });
 };
 

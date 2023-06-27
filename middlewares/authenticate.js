@@ -8,7 +8,6 @@ const { HttpError } = require("../helpers");
 const authenticate = async (req, res, next) => {
   const { authorization = "" } = req.headers;
   const [bearer, token] = authorization.split(" ");
-  //const [bearer] = authorization.split(" "); //[bearer, token]
 
   if (bearer !== "Bearer") {
     next(HttpError(401, "Not authorized"));
@@ -16,13 +15,12 @@ const authenticate = async (req, res, next) => {
 
   try {
     const { id } = jwt.verify(token, ACCESS_SECRET_KEY);
-    console.log(id);
     const user = await User.findById(id);
 
     if (!user || !user.accessToken || user.accessToken !== token) {
       next(HttpError(401, "Not authorized"));
     }
-    console.log(user);
+
     req.user = user;
     next();
   } catch {
