@@ -6,7 +6,6 @@ const createReviewSchema = Joi.object({
 });
 
 const updateReviewSchema = Joi.object().keys({
-  rating: createReviewSchema.extract("rating"),
   comment: createReviewSchema.extract("comment"),
 });
 
