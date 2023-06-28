@@ -22,6 +22,11 @@ const getOwnerReview = controllerWrap(async (req, res) => {
 
 const addReview = controllerWrap(async (req, res) => {
   const { _id: owner } = req.user;
+  const id = await Review.findOne({ owner });
+
+  if (id) {
+    throw HttpError(409, "User already has a review");
+  }
   const result = await Review.create({ ...req.body, owner });
   res.json(result);
 });
