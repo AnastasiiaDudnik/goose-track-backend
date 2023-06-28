@@ -3,21 +3,16 @@ const { HttpError } = require("..//helpers");
 const { controllerWrap } = require("..//decorators");
 
 const getAllReviews = controllerWrap(async (req, res) => {
-  const result = await Review.find({})
-    .populate("owner", "avatarURL")
-    .limit(limit)
-    .skip(skip);
+  const result = await Review.find({}).populate("owner", "name avatarURL");
   res.json(result);
 });
 
 const getOwnerReview = controllerWrap(async (req, res) => {
   const { _id: owner } = req.user;
-  const { page = 1, limit = 10 } = req.query;
-  const skip = (page - 1) * limit;
-  const result = await Review.find({ owner })
-    .populate("owner", "avatarURL")
-    .limit(limit)
-    .skip(skip);
+  const result = await Review.find({ owner }).populate(
+    "owner",
+    "name avatarURL"
+  );
 
   if (!result) {
     throw HttpError(404);
