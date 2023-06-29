@@ -142,6 +142,43 @@
         }
       }
     },
+    "/users/refresh": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Get new user's refreshToken ",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Refresh object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Token is invalid"
+          }
+        }
+      }
+    },
 
     "/reviews": {
       "get": {
@@ -471,7 +508,35 @@
           "skype": null
         }
       },
-
+      "RefreshTokenRequest": {
+        "type": "object",
+        "required": ["refreshToken"],
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refreshToken",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4ODA0NTc2MywiZXhwIjoxNjg4NjUwNTYzfQ.3rBPcxQO0-q8fgq7UN35HgX03lnapwprSBnd2gQj0Jo"
+          }
+        }
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "description": "New user's tokens",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "New accessToken"
+          },
+          "refreshToken": {
+            "type": "number",
+            "description": "New refreshToken"
+          }
+        },
+        "example": {
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4ODA0NjU0NywiZXhwIjoxNjg4MDUwMTQ3fQ.Ag7JKkiqxE4FG-hksi_EUxcA_8BTyKeciySJGFL9XzQ",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4ODA0NjU0NywiZXhwIjoxNjg4NjUxMzQ3fQ.bGUwhQQwkoZrZjqxrpBsdOklHfbTsPhd8Br00ogR0vw"
+        }
+      },
       "ReviewsResponse": {
         "type": "array",
         "items": {
@@ -556,7 +621,7 @@
       },
       "ReviewCreationResponse": {
         "type": "object",
-        "description": "Review",
+        "description": "User's review",
         "properties": {
           "_id": {
             "type": "string",
