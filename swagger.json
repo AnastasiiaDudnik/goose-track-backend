@@ -23,6 +23,10 @@
     {
       "name": "Reviews",
       "description": "Reviews endpoints"
+    },
+    {
+      "name": "Tasks",
+      "description": "Tasks endpoints"
     }
   ],
   "paths": {
@@ -191,12 +195,84 @@
             "description": "Not authorized"
           },
           "404": {
-            "description": "Bad request(invalid request body)",
-            "content": {}
+            "description": "Bad request(invalid request body)"
           },
           "409": {
-            "description": "User already has a review",
-            "content": {}
+            "description": "User already has a review"
+          }
+        }
+      }
+    },
+
+    "/tasks": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get user's tasks for month",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Date object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonthTasksRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonthTasksResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Bad request(invalid request body)"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Add task to user",
+        "parameters": [],
+        "requestBody": {
+          "description": "Task's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCreationRequest"
+              }
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskCreationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "response body": "Not authorized"
+          },
+          "404": {
+            "description": "Bad request(invalid request body): start, end must be in HH-MM format, priority must be one of [low, medium, high],date must be in YYYY-MM-DD format, category must be one of [to-do, in-progress, done]"
           }
         }
       }
@@ -429,10 +505,10 @@
                   "type": "string",
                   "description": "Owner avatarURL"
                 }
-              },
-              "createdAt": { "type": "string" },
-              "updatedAt": { "type": "string" }
-            }
+              }
+            },
+            "createdAt": { "type": "string" },
+            "updatedAt": { "type": "string" }
           }
         },
         "example": [
@@ -501,16 +577,183 @@
           "createdAt": { "type": "string" },
           "updatedAt": { "type": "string" }
         },
+        "example": {
+          "rating": 3,
+          "comment": "A pleasant find for me. It's exactly what I was looking for. The main advantage is the visual visualization in the form of boards and cards. I recommend it!",
+          "owner": "64983b139dd09fca9aaa6da4",
+          "_id": "649c214a1f128a4c54da4b52",
+          "createdAt": "2023-06-28T12:02:18.465Z",
+          "updatedAt": "2023-06-28T12:02:18.465Z"
+        }
+      },
+
+      "MonthTasksRequest": {
+        "type": "object",
+        "required": ["date"],
+        "properties": {
+          "date": {
+            "type": "date",
+            "description": "Date must be in YYYY-MM-DD format",
+            "example": "2023-06-01"
+          }
+        }
+      },
+      "MonthTasksResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "User's task id"
+            },
+            "title": {
+              "type": "string",
+              "description": "User's task title"
+            },
+            "start": {
+              "type": "string",
+              "description": "User's task start time must be in HH-MM format"
+            },
+            "end": {
+              "type": "string",
+              "description": "User's task end time must be in HH-MM format"
+            },
+            "priority": {
+              "type": "string",
+              "description": "User's task priority must be one of [low, medium, high]"
+            },
+            "date": {
+              "type": "Date",
+              "description": "User's task date must be in YYYY-MM-DD format"
+            },
+            "category": {
+              "type": "string",
+              "description": "User's task priority must be one of [to-do, in-progress, done]"
+            },
+            "owner": {
+              "type": "string",
+              "description": "User's task owner id"
+            },
+
+            "createdAt": { "type": "string" },
+            "updatedAt": { "type": "string" }
+          }
+        },
         "example": [
           {
-            "rating": 3,
-            "comment": "A pleasant find for me. It's exactly what I was looking for. The main advantage is the visual visualization in the form of boards and cards. I recommend it!",
+            "_id": "649c7eee04b4eed7994ac415",
+            "title": "To learn react-native",
+            "start": "08-00",
+            "end": "12-00",
+            "priority": "low",
+            "date": "2023-06-30T00:00:00.000Z",
+            "category": "to-do",
             "owner": "64983b139dd09fca9aaa6da4",
-            "_id": "649c214a1f128a4c54da4b52",
-            "createdAt": "2023-06-28T12:02:18.465Z",
-            "updatedAt": "2023-06-28T12:02:18.465Z"
+            "createdAt": "2023-06-28T18:41:50.296Z",
+            "updatedAt": "2023-06-28T18:41:50.296Z"
+          },
+          {
+            "_id": "649d6a072e812167b5df7bd2",
+            "title": "To learn js",
+            "start": "08-00",
+            "end": "12-00",
+            "priority": "low",
+            "date": "2023-06-28T00:00:00.000Z",
+            "category": "to-do",
+            "owner": "64983b139dd09fca9aaa6da4",
+            "createdAt": "2023-06-29T11:24:55.187Z",
+            "updatedAt": "2023-06-29T11:24:55.187Z"
           }
         ]
+      },
+      "TaskCreationRequest": {
+        "type": "object",
+        "required": ["title", "start", "end", "priority", "date", "category"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "User's task title",
+            "example": "To learn react-native"
+          },
+          "start": {
+            "type": "string",
+            "description": "User's task start time must be in HH-MM format",
+            "example": "08-00"
+          },
+          "end": {
+            "type": "string",
+            "description": "User's task end time must be in HH-MM format",
+            "example": "12-00"
+          },
+          "priority": {
+            "type": "string",
+            "description": "User's task priority must be one of [low, medium, high]",
+            "example": "high"
+          },
+          "date": {
+            "type": "date",
+            "description": "User's task date must be in YYYY-MM-DD format",
+            "example": "2023-06-30"
+          },
+          "category": {
+            "type": "string",
+            "description": "User's task priority must be one of [to-do, in-progress, done]",
+            "example": "to-do"
+          }
+        }
+      },
+      "TaskCreationResponse": {
+        "type": "object",
+        "description": "User's task",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "User's task title"
+          },
+          "start": {
+            "type": "string",
+            "description": "User's task start time must be in HH-MM format"
+          },
+          "end": {
+            "type": "string",
+            "description": "User's task end time must be in HH-MM format"
+          },
+          "priority": {
+            "type": "string",
+            "description": "User's task priority must be one of [low, medium, high]"
+          },
+          "date": {
+            "type": "Date",
+            "description": "User's task date must be in YYYY-MM-DD format"
+          },
+          "category": {
+            "type": "string",
+            "description": "User's task priority must be one of [to-do, in-progress, done]"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User's task owner id"
+          },
+          "_id": {
+            "type": "string",
+            "description": "User's task id"
+          },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" }
+        },
+        "example": {
+          "title": "To learn react-native",
+          "start": "08-00",
+          "end": "12-00",
+          "priority": "high",
+          "date": "2023-06-30T00:00:00.000Z",
+          "category": "to-do",
+          "owner": "64983b139dd09fca9aaa6da4",
+          "_id": "649c7eee04b4eed7994ac415",
+          "createdAt": "2023-06-28T18:41:50.296Z",
+          "updatedAt": "2023-06-28T18:41:50.296Z"
+        }
       }
     },
     "securitySchemes": {
