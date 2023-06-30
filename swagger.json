@@ -145,7 +145,7 @@
     "/users/refresh": {
       "post": {
         "tags": ["User"],
-        "summary": "Get new user's refreshToken ",
+        "summary": "Get new user's tokens",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -240,6 +240,65 @@
         }
       }
     },
+    "/reviews/{id}": {
+      "get": {
+        "tags": ["Reviews"],
+        "summary": "Get review by user's id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "64983b139dd09fca9aaa6da4"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewByUserIdResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reviews"],
+        "summary": "Delete review by user's id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "user's id"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "ОК-Review deleted"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
 
     "/tasks": {
       "get": {
@@ -313,7 +372,8 @@
           }
         }
       }
-    }
+    },
+    "/tasks/{id}": {}
   },
   "components": {
     "schemas": {
@@ -621,7 +681,7 @@
       },
       "ReviewCreationResponse": {
         "type": "object",
-        "description": "User's review",
+        "description": "User's created review",
         "properties": {
           "_id": {
             "type": "string",
@@ -649,6 +709,56 @@
           "_id": "649c214a1f128a4c54da4b52",
           "createdAt": "2023-06-28T12:02:18.465Z",
           "updatedAt": "2023-06-28T12:02:18.465Z"
+        }
+      },
+      "ReviewByUserIdResponse": {
+        "type": "object",
+        "description": "Review got by user's id ",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Review id"
+          },
+          "rating": {
+            "type": "number",
+            "description": "Review rating"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Review comment"
+          },
+          "owner": {
+            "type": "object",
+            "description": "Review owner",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Owner id"
+              },
+              "name": {
+                "type": "string",
+                "description": "Owner name"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "Owner avatarURL"
+              }
+            }
+          },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" }
+        },
+        "example": {
+          "_id": "649c02e4d5ae7f2605a11aac",
+          "rating": 3,
+          "comment": "A pleasant find for me. It's exactly what I was looking for. The main advantage is the visual visualization in the form of boards and cards. I recommend it!",
+          "owner": {
+            "_id": "64983b139dd09fca9aaa6da4",
+            "name": "Bogdan",
+            "avatarURL": "http://www.gravatar.com/c30d6c14569650b95a78e33e5013683e.json"
+          },
+          "createdAt": "2023-06-28T09:52:36.971Z",
+          "updatedAt": "2023-06-28T09:52:36.971Z"
         }
       },
 
