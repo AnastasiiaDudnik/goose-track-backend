@@ -78,7 +78,7 @@ const login = async (req, res) => {
   await User.findByIdAndUpdate(user.id, { accessToken, refreshToken });
 
   res.json({
-    accessToken,
+    token:accessToken,
     refreshToken,
     user: {
       id: user.id,
