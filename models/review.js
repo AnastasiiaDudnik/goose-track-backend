@@ -2,8 +2,9 @@ const { Schema, model } = require("mongoose");
 
 const reviewSchema = new Schema(
   {
-    name: {
-      type: String,
+    rating: {
+      type: Number,
+      default: 0,
       required: true,
     },
     comment: {

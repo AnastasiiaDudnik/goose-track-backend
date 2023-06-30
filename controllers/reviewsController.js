@@ -3,32 +3,31 @@ const { HttpError } = require("..//helpers");
 const { controllerWrap } = require("..//decorators");
 
 const getAllReviews = controllerWrap(async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  const skip = (page - 1) * limit;
-  const result = await Review.find({})
-    .populate("owner", "name comment")
-    .limit(limit)
-    .skip(skip);
+  const result = await Review.find({}).populate("owner", "name avatarURL");
   res.json(result);
 });
 
 const getOwnerReview = controllerWrap(async (req, res) => {
   const { _id: owner } = req.user;
-  const { page = 1, limit = 10 } = req.query;
-  const skip = (page - 1) * limit;
-  const result = await Review.find({ owner })
-    .populate("owner", "comment")
-    .limit(limit)
-    .skip(skip);
+  const result = await Review.find({ owner }).populate(
+    "owner",
+    "name avatarURL"
+  );
 
   if (!result) {
     throw HttpError(404);
   }
-  res.json(result);
+  let [result1] = result; // деструкт. объект из массива
+  res.json(result1);
 });
 
 const addReview = controllerWrap(async (req, res) => {
   const { _id: owner } = req.user;
+  const id = await Review.findOne({ owner });
+
+  if (id) {
+    throw HttpError(409, "User already has a review");
+  }
   const result = await Review.create({ ...req.body, owner });
   res.json(result);
 });
@@ -47,16 +46,24 @@ const updateCommentReview = controllerWrap(async (req, res) => {
 });
 
 const deleteReview = controllerWrap(async (req, res) => {
-  const { id } = req.params;
-  const result = await Review.findByIdAndRemove(id);
+  const { _id: owner } = req.user;
+
+  const result = await Review.findOneAndDelete({ owner });
+
+  console.log(result);
 
   if (!result) {
     throw HttpError(404);
   }
+  res.status(204).json({ message: "Review deleted" });
 
-  res.json(result);
-
-  return result;
+  // const { id } = req.params;
+  // const result = await Review.findByIdAndRemove(id);
+  // if (!result) {
+  //   throw HttpError(404);
+  // }
+  // res.json(result);
+  // return result;
 });
 
 module.exports = {

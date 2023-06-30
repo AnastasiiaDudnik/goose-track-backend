@@ -25,7 +25,7 @@ router.post("/register", validate(registerSchema), register);
 
 router.post("/login", validate(loginSchema), login);
 
-router.post("/refresh", validate(refreshSchema), refresh);
+router.post("/refresh", validate(refreshSchema), authenticate, refresh);
 
 router.get("/current", authenticate, getCurrent);
 

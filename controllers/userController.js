@@ -33,7 +33,7 @@ const register = async (req, res) => {
     id: newUser._id,
   };
 
-  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "3m" });
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "1h" });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   });
@@ -55,9 +55,13 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  const comparePassword = bcrypt.compare(password, user.password);
 
-  if (!user || !comparePassword) {
+  if (!user) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+
+  const comparePassword = await bcrypt.compare(password, user.password);
+  if (!comparePassword) {
     throw HttpError(401, "Email or password is wrong");
   }
 
@@ -90,6 +94,7 @@ const login = async (req, res) => {
 
 const refresh = async (req, res) => {
   const { refreshToken: token } = req.body;
+
   try {
     const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
     const isExist = await User.findOne({ refreshToken: token });
@@ -102,11 +107,12 @@ const refresh = async (req, res) => {
     };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: "3m",
+      expiresIn: "1h",
     });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
       expiresIn: "7d",
     });
+    await User.findByIdAndUpdate(id, { accessToken, refreshToken });
 
     res.json({
       accessToken,
@@ -118,11 +124,16 @@ const refresh = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { name, email } = req.user;
+  const { id, name, email, avatarURL, phone, birthday, skype } = req.user;
 
   res.json({
+    id,
     name,
     email,
+    avatarURL,
+    phone,
+    birthday,
+    skype,
   });
 };
 
@@ -170,7 +181,7 @@ const logout = async (req, res) => {
 
   await User.findByIdAndUpdate(_id, { accessToken: "", refreshToken: "" });
 
-  res.status(204);
+  res.status(204).json({ message: "Logout is successed" });
 };
 
 module.exports = {

@@ -10,4 +10,4 @@ const controllerWrap = (controller) => {
   return func;
 };
 
-module.exports = controllerWrap;
+module.exports = controllerWrap; 

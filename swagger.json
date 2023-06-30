@@ -23,6 +23,10 @@
     {
       "name": "Reviews",
       "description": "Reviews endpoints"
+    },
+    {
+      "name": "Tasks",
+      "description": "Tasks endpoints"
     }
   ],
   "paths": {
@@ -54,7 +58,7 @@
             }
           },
           "400": {
-            "description": "Bad request (invalid request body)",
+            "description": "Bad request(invalid request body)",
             "content": {}
           },
           "409": {
@@ -99,6 +103,82 @@
         }
       }
     },
+    "/users/logout": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Log out user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Logout is successed"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get information about the current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Information found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        }
+      }
+    },
+    "/users/refresh": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Get new user's tokens",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Refresh object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "403": {
+            "description": "Token is invalid"
+          }
+        }
+      }
+    },
 
     "/reviews": {
       "get": {
@@ -118,6 +198,211 @@
           },
           "500": {
             "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Reviews"],
+        "summary": "Create a new review",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Review's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewCreationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ОК - Review was successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewCreationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Bad request(invalid request body)"
+          },
+          "409": {
+            "description": "User already has a review"
+          }
+        }
+      }
+    },
+    "/reviews/{id}": {
+      "get": {
+        "tags": ["Reviews"],
+        "summary": "Get review by user's id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "64983b139dd09fca9aaa6da4"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewByUserIdResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reviews"],
+        "summary": "Delete review by user's id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "user's id"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "ОК-Review deleted"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+
+    "/tasks": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get user's tasks for month",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Date object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonthTasksRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonthTasksResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Bad request(invalid request body)"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Add task to user",
+        "parameters": [],
+        "requestBody": {
+          "description": "Task's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCreationRequest"
+              }
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskCreationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "response body": "Not authorized"
+          },
+          "404": {
+            "description": "Bad request(invalid request body): start, end must be in HH-MM format, priority must be one of [low, medium, high],date must be in YYYY-MM-DD format, category must be one of [to-do, in-progress, done]"
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get task by task's id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "649d6172f796a41babf88dd8"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "ОК",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskByIdResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Task with {id} not found"
           }
         }
       }
@@ -259,44 +544,487 @@
         },
 
         "example": {
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTkxZTYxZDAzMzcxMDkxNmFhOGYwNCIsImlhdCI6MTY4Nzc3NzgwNSwiZXhwIjoxNjg3Nzc3OTg1fQ.W11Xu3iPwMJA6wFPVtzGu0FNm9k6J7Oly66Tzr0prvQ",
-          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTkxZTYxZDAzMzcxMDkxNmFhOGYwNCIsImlhdCI6MTY4Nzc3NzgwNSwiZXhwIjoxNjg4MzgyNjA1fQ.PRmSgMscQpP4ZAQSyFExJsqP3OUrLjqmY98sYmllmS8",
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4Nzc4NTk5MCwiZXhwIjoxNjg3Nzg2MTcwfQ.pDaxG-bCwh654H34GaqIDe6oByCLavaMCLN9o98X-5M",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4Nzc4NTk5MCwiZXhwIjoxNjg4MzkwNzkwfQ.cUytD86J8B87cpas7O1mNvSPciSKAc7zcnPRd23p9zs",
           "user": {
-            "id": "64991e61d033710916aa8f04",
+            "id": "64983b139dd09fca9aaa6da4",
             "name": "Bogdan",
-            "email": "bogdan5@gmail.com",
-            "avatarURL": "http://www.gravatar.com/a6939c71c641cabbce2b6fe6d6c0ada2.json",
+            "email": "bogdan@gmail.com",
+            "avatarURL": "http://www.gravatar.com/c30d6c14569650b95a78e33e5013683e.json",
             "phone": null,
             "birthday": null,
             "skype": null
           }
         }
       },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User's id"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar path"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone"
+          },
+          "birthday": {
+            "type": "data",
+            "description": "User's birthday"
+          },
+          "skype": {
+            "type": "string",
+            "description": "User's skype"
+          }
+        },
 
+        "example": {
+          "id": "64983b139dd09fca9aaa6da4",
+          "name": "Bogdan",
+          "email": "bogdan@gmail.com",
+          "avatarURL": "http://www.gravatar.com/c30d6c14569650b95a78e33e5013683e.json",
+          "phone": null,
+          "birthday": null,
+          "skype": null
+        }
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "required": ["refreshToken"],
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refreshToken",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4ODA0NTc2MywiZXhwIjoxNjg4NjUwNTYzfQ.3rBPcxQO0-q8fgq7UN35HgX03lnapwprSBnd2gQj0Jo"
+          }
+        }
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "description": "New user's tokens",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "New accessToken"
+          },
+          "refreshToken": {
+            "type": "number",
+            "description": "New refreshToken"
+          }
+        },
+        "example": {
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4ODA0NjU0NywiZXhwIjoxNjg4MDUwMTQ3fQ.Ag7JKkiqxE4FG-hksi_EUxcA_8BTyKeciySJGFL9XzQ",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4ODA0NjU0NywiZXhwIjoxNjg4NjUxMzQ3fQ.bGUwhQQwkoZrZjqxrpBsdOklHfbTsPhd8Br00ogR0vw"
+        }
+      },
       "ReviewsResponse": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
-            "owner": {
+            "_id": {
               "type": "string",
-              "description": "Owner name"
+              "description": "Review id"
             },
-            "name comment": {
+            "rating": {
+              "type": "number",
+              "description": "Review rating"
+            },
+            "comment": {
               "type": "string",
-              "description": "Owner comment"
-            }
+              "description": "Review comment"
+            },
+            "owner": {
+              "type": "object",
+              "description": "Review owner",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Owner id"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Owner name"
+                },
+                "avatarURL": {
+                  "type": "string",
+                  "description": "Owner avatarURL"
+                }
+              }
+            },
+            "createdAt": { "type": "string" },
+            "updatedAt": { "type": "string" }
           }
         },
         "example": [
           {
-            "owner": "Kateryna Hilcher",
-            "comment": "Really helps to plan the day."
+            "_id": "649b43b13b98cd738d44bf7d",
+            "rating": 5,
+            "comment": "Very cool app, everything is clear and functional. A great program for time chronology.",
+            "owner": {
+              "_id": "649b43403b98cd738d44bf77",
+              "name": "Vitalii",
+              "avatarURL": "http://www.gravatar.com/43311ff72844c2febf41f3a2e3fe91b7.json"
+            },
+            "createdAt": "2023-06-27T20:16:49.198Z",
+            "updatedAt": "2023-06-27T20:16:49.198Z"
           },
-          { "owner": "Mykola Kapytaniuk", "comment": "Very cool app." }
+          {
+            "_id": "649c02e4d5ae7f2605a11aac",
+            "rating": 3,
+            "comment": "A pleasant find for me. It's exactly what I was looking for. The main advantage is the visual visualization in the form of boards and cards. I recommend it!",
+            "owner": {
+              "_id": "64983b139dd09fca9aaa6da4",
+              "name": "Bogdan",
+              "avatarURL": "http://www.gravatar.com/c30d6c14569650b95a78e33e5013683e.json"
+            },
+            "createdAt": "2023-06-28T09:52:36.971Z",
+            "updatedAt": "2023-06-28T09:52:36.971Z"
+          }
         ]
+      },
+      "ReviewCreationRequest": {
+        "type": "object",
+        "required": ["rating", "comment"],
+        "properties": {
+          "rating": {
+            "type": "number",
+            "description": "Review rating",
+            "example": "3"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Review comment",
+            "example": "A pleasant find for me. It's exactly what I was looking for. The main advantage is the visual visualization in the form of boards and cards. I recommend it!"
+          }
+        }
+      },
+      "ReviewCreationResponse": {
+        "type": "object",
+        "description": "User's created review",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Review id"
+          },
+          "rating": {
+            "type": "number",
+            "description": "Review rating"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Review comment"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Owner id"
+          },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" }
+        },
+        "example": {
+          "rating": 3,
+          "comment": "A pleasant find for me. It's exactly what I was looking for. The main advantage is the visual visualization in the form of boards and cards. I recommend it!",
+          "owner": "64983b139dd09fca9aaa6da4",
+          "_id": "649c214a1f128a4c54da4b52",
+          "createdAt": "2023-06-28T12:02:18.465Z",
+          "updatedAt": "2023-06-28T12:02:18.465Z"
+        }
+      },
+      "ReviewByUserIdResponse": {
+        "type": "object",
+        "description": "Review got by user's id ",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Review id"
+          },
+          "rating": {
+            "type": "number",
+            "description": "Review rating"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Review comment"
+          },
+          "owner": {
+            "type": "object",
+            "description": "Review owner",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Owner id"
+              },
+              "name": {
+                "type": "string",
+                "description": "Owner name"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "Owner avatarURL"
+              }
+            }
+          },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" }
+        },
+        "example": {
+          "_id": "649c02e4d5ae7f2605a11aac",
+          "rating": 3,
+          "comment": "A pleasant find for me. It's exactly what I was looking for. The main advantage is the visual visualization in the form of boards and cards. I recommend it!",
+          "owner": {
+            "_id": "64983b139dd09fca9aaa6da4",
+            "name": "Bogdan",
+            "avatarURL": "http://www.gravatar.com/c30d6c14569650b95a78e33e5013683e.json"
+          },
+          "createdAt": "2023-06-28T09:52:36.971Z",
+          "updatedAt": "2023-06-28T09:52:36.971Z"
+        }
+      },
+
+      "MonthTasksRequest": {
+        "type": "object",
+        "required": ["date"],
+        "properties": {
+          "date": {
+            "type": "date",
+            "description": "Date must be in YYYY-MM-DD format",
+            "example": "2023-06-01"
+          }
+        }
+      },
+      "MonthTasksResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "User's task id"
+            },
+            "title": {
+              "type": "string",
+              "description": "User's task title"
+            },
+            "start": {
+              "type": "string",
+              "description": "User's task start time must be in HH-MM format"
+            },
+            "end": {
+              "type": "string",
+              "description": "User's task end time must be in HH-MM format"
+            },
+            "priority": {
+              "type": "string",
+              "description": "User's task priority must be one of [low, medium, high]"
+            },
+            "date": {
+              "type": "Date",
+              "description": "User's task date must be in YYYY-MM-DD format"
+            },
+            "category": {
+              "type": "string",
+              "description": "User's task priority must be one of [to-do, in-progress, done]"
+            },
+            "owner": {
+              "type": "string",
+              "description": "User's task owner id"
+            },
+
+            "createdAt": { "type": "string" },
+            "updatedAt": { "type": "string" }
+          }
+        },
+        "example": [
+          {
+            "_id": "649c7eee04b4eed7994ac415",
+            "title": "To learn react-native",
+            "start": "08-00",
+            "end": "12-00",
+            "priority": "low",
+            "date": "2023-06-30T00:00:00.000Z",
+            "category": "to-do",
+            "owner": "64983b139dd09fca9aaa6da4",
+            "createdAt": "2023-06-28T18:41:50.296Z",
+            "updatedAt": "2023-06-28T18:41:50.296Z"
+          },
+          {
+            "_id": "649d6a072e812167b5df7bd2",
+            "title": "To learn js",
+            "start": "08-00",
+            "end": "12-00",
+            "priority": "low",
+            "date": "2023-06-28T00:00:00.000Z",
+            "category": "to-do",
+            "owner": "64983b139dd09fca9aaa6da4",
+            "createdAt": "2023-06-29T11:24:55.187Z",
+            "updatedAt": "2023-06-29T11:24:55.187Z"
+          }
+        ]
+      },
+      "TaskCreationRequest": {
+        "type": "object",
+        "required": ["title", "start", "end", "priority", "date", "category"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "User's task title",
+            "example": "To learn react-native"
+          },
+          "start": {
+            "type": "string",
+            "description": "User's task start time must be in HH-MM format",
+            "example": "08-00"
+          },
+          "end": {
+            "type": "string",
+            "description": "User's task end time must be in HH-MM format",
+            "example": "12-00"
+          },
+          "priority": {
+            "type": "string",
+            "description": "User's task priority must be one of [low, medium, high]",
+            "example": "high"
+          },
+          "date": {
+            "type": "date",
+            "description": "User's task date must be in YYYY-MM-DD format",
+            "example": "2023-06-30"
+          },
+          "category": {
+            "type": "string",
+            "description": "User's task priority must be one of [to-do, in-progress, done]",
+            "example": "to-do"
+          }
+        }
+      },
+      "TaskCreationResponse": {
+        "type": "object",
+        "description": "User's task",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "User's task title"
+          },
+          "start": {
+            "type": "string",
+            "description": "User's task start time must be in HH-MM format"
+          },
+          "end": {
+            "type": "string",
+            "description": "User's task end time must be in HH-MM format"
+          },
+          "priority": {
+            "type": "string",
+            "description": "User's task priority must be one of [low, medium, high]"
+          },
+          "date": {
+            "type": "Date",
+            "description": "User's task date must be in YYYY-MM-DD format"
+          },
+          "category": {
+            "type": "string",
+            "description": "User's task priority must be one of [to-do, in-progress, done]"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User's task owner id"
+          },
+          "_id": {
+            "type": "string",
+            "description": "User's task id"
+          },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" }
+        },
+        "example": {
+          "title": "To learn react-native",
+          "start": "08-00",
+          "end": "12-00",
+          "priority": "high",
+          "date": "2023-06-30T00:00:00.000Z",
+          "category": "to-do",
+          "owner": "64983b139dd09fca9aaa6da4",
+          "_id": "649c7eee04b4eed7994ac415",
+          "createdAt": "2023-06-28T18:41:50.296Z",
+          "updatedAt": "2023-06-28T18:41:50.296Z"
+        }
+      },
+      "TaskByIdResponse":{
+        "type": "object",
+        "description": "User's task",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's task by task's id"
+          },
+          "title": {
+            "type": "string",
+            "description": "User's task title"
+          },
+          "start": {
+            "type": "string",
+            "description": "User's task start time must be in HH-MM format"
+          },
+          "end": {
+            "type": "string",
+            "description": "User's task end time must be in HH-MM format"
+          },
+          "priority": {
+            "type": "string",
+            "description": "User's task priority must be one of [low, medium, high]"
+          },
+          "date": {
+            "type": "Date",
+            "description": "User's task date must be in YYYY-MM-DD format"
+          },
+          "category": {
+            "type": "string",
+            "description": "User's task priority must be one of [to-do, in-progress, done]"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User's task owner id"
+          },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" }
+        },
+        "example": {
+          "_id": "649d6172f796a41babf88dd8",
+          "title": "To learn Angular",
+          "start": "08-00",
+          "end": "12-00",
+          "priority": "high",
+          "date": "2023-07-04T00:00:00.000Z",
+          "category": "to-do",
+          "owner": "64983b139dd09fca9aaa6da4",
+          "createdAt": "2023-06-29T10:48:18.239Z",
+          "updatedAt": "2023-06-29T10:48:18.239Z"
+        }
       }
     },
-    "securitySchemes": {}
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Bearer token to access these api endpoints"
+      }
+    }
   }
 }
