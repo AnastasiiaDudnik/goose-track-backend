@@ -18,7 +18,7 @@ router.get("/", getAllReviews);
 router.get("/:id", authenticate, isValidId, getOwnerReview);
 router.post("/", authenticate, validateBody(createReviewSchema), addReview);
 router.patch(
-  "/:id/comment",
+  "/:id",
   authenticate,
   isValidId,
   validateBody(updateReviewSchema),

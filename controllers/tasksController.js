@@ -51,7 +51,7 @@ const updateTask = async (req, res) => {
     });
 
     if (!task) {
-        throw new HttpError(404, `Contact with ${id} not found`);
+        throw new HttpError(404, `Task with ${id} not found`);
     }
 
     res.json(task);
