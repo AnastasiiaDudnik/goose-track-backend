@@ -66,7 +66,7 @@ const login = async (req, res) => {
   };
 
   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-    expiresIn: "3m",
+    expiresIn: "1h",
   });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
     expiresIn: "7d",
@@ -74,7 +74,7 @@ const login = async (req, res) => {
   await User.findByIdAndUpdate(user.id, { accessToken, refreshToken });
 
   res.json({
-    token: accessToken,
+    accessToken,
     refreshToken,
     user: {
       id: user.id,
@@ -128,8 +128,8 @@ const getCurrent = async (req, res) => {
 
 const update = async (req, res) => {
   const { _id } = req.user;
-  const { avatarURL, name, email, phone, skype, birthday } = req.body;
-  const { path: oldPath } = req.file;
+  const { name, email, phone, skype, birthday } = req.body;
+  const { fieldname, path: oldPath } = req.file;
   const fileData = await cloudinary.uploader.upload(oldPath, {
     folder: "avatar",
   });
@@ -137,7 +137,7 @@ const update = async (req, res) => {
 
   const fieldsToUpdate = {};
 
-  if (avatarURL) {
+  if (fieldname === "avatarURL") {
     fieldsToUpdate.avatarURL = fileData.url;
   }
   if (name) {
@@ -155,6 +155,8 @@ const update = async (req, res) => {
   if (birthday) {
     fieldsToUpdate.birthday = birthday;
   }
+
+  console.log(fieldsToUpdate);
 
   const result = await User.findByIdAndUpdate(_id, fieldsToUpdate, {
     new: true,
