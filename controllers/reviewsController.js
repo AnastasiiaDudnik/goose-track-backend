@@ -33,24 +33,33 @@ const addReview = controllerWrap(async (req, res) => {
 });
 
 const updateCommentReview = controllerWrap(async (req, res) => {
-  const { id } = req.params;
-  const result = await Review.findByIdAndUpdate(id, req.body, {
+  const { _id: owner } = req.user;
+
+  const result = await Review.findOneAndUpdate({ owner }, req.body, {
     new: true,
-  });
+  }).populate("owner", "name avatarURL");
 
   if (!result) {
     throw HttpError(404);
   }
-
   res.json(result);
+
+  // const { id } = req.params;
+  // const result = await Review.findByIdAndUpdate(id, req.body, {
+  //   new: true,
+  // });
+
+  // if (!result) {
+  //   throw HttpError(404);
+  // }
+
+  // res.json(result);
 });
 
 const deleteReview = controllerWrap(async (req, res) => {
   const { _id: owner } = req.user;
 
   const result = await Review.findOneAndDelete({ owner });
-
-  console.log(result);
 
   if (!result) {
     throw HttpError(404);
