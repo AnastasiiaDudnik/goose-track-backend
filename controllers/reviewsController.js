@@ -17,7 +17,8 @@ const getOwnerReview = controllerWrap(async (req, res) => {
   if (!result) {
     throw HttpError(404);
   }
-  res.json(result);
+  let [result1] = result; // деструкт. объект из массива
+  res.json(result1);
 });
 
 const addReview = controllerWrap(async (req, res) => {
@@ -45,16 +46,24 @@ const updateCommentReview = controllerWrap(async (req, res) => {
 });
 
 const deleteReview = controllerWrap(async (req, res) => {
-  const { id } = req.params;
-  const result = await Review.findByIdAndRemove(id);
+  const { _id: owner } = req.user;
+
+  const result = await Review.findOneAndDelete({ owner });
+
+  console.log(result);
 
   if (!result) {
     throw HttpError(404);
   }
+  res.status(204).json({ message: "Review deleted" });
 
-  res.json(result);
-
-  return result;
+  // const { id } = req.params;
+  // const result = await Review.findByIdAndRemove(id);
+  // if (!result) {
+  //   throw HttpError(404);
+  // }
+  // res.json(result);
+  // return result;
 });
 
 module.exports = {
