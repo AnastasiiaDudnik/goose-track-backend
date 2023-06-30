@@ -21,7 +21,7 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatar = gravatar.profile_url(email);
+  const avatar = gravatar.url(email, { protocol: "https" });
 
   const newUser = await User.create({
     ...req.body,
@@ -78,7 +78,7 @@ const login = async (req, res) => {
   await User.findByIdAndUpdate(user.id, { accessToken, refreshToken });
 
   res.json({
-    token: accessToken,
+    accessToken,
     refreshToken,
     user: {
       id: user.id,
@@ -139,8 +139,8 @@ const getCurrent = async (req, res) => {
 
 const update = async (req, res) => {
   const { _id } = req.user;
-  const { avatarURL, name, email, phone, skype, birthday } = req.body;
-  const { path: oldPath } = req.file;
+  const { name, email, phone, skype, birthday } = req.body;
+  const { fieldname, path: oldPath } = req.file;
   const fileData = await cloudinary.uploader.upload(oldPath, {
     folder: "avatar",
   });
@@ -148,7 +148,7 @@ const update = async (req, res) => {
 
   const fieldsToUpdate = {};
 
-  if (avatarURL) {
+  if (fieldname === "avatarURL") {
     fieldsToUpdate.avatarURL = fileData.url;
   }
   if (name) {
@@ -166,6 +166,8 @@ const update = async (req, res) => {
   if (birthday) {
     fieldsToUpdate.birthday = birthday;
   }
+
+  console.log(fieldsToUpdate);
 
   const result = await User.findByIdAndUpdate(_id, fieldsToUpdate, {
     new: true,
