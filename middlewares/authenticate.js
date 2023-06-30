@@ -18,7 +18,7 @@ const authenticate = async (req, res, next) => {
     const user = await User.findById(id);
 
 
-    if (!user || !user.accessToken || !user.token) {
+    if (!user || !user.accessToken || user.accessToken !== token) {
       next(HttpError(401, "Not authorized"));
     }
     req.user = user;
