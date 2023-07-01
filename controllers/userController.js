@@ -140,17 +140,23 @@ const getCurrent = async (req, res) => {
 const update = async (req, res) => {
   const { _id } = req.user;
   const { name, email, phone, skype, birthday } = req.body;
-  const { filename, path: oldPath } = req.file;
-  const fileData = await cloudinary.uploader.upload(oldPath, {
-    folder: "avatar",
-  });
-  await fs.unlink(oldPath);
+
 
   const fieldsToUpdate = {};
 
-  if (filename) {
-    fieldsToUpdate.avatarURL = fileData.url;
+  if (req.file) {
+    const { fieldname, path: oldPath } = req.file;
+    const fileData = await cloudinary.uploader.upload(oldPath, {
+      folder: "avatar",
+    });
+    await fs.unlink(oldPath);
+
+    if (fieldname === "avatarURL") {
+      fieldsToUpdate.avatarURL = fileData.url;
+    }
+
   }
+
   if (name) {
     fieldsToUpdate.name = name;
   }
@@ -166,8 +172,6 @@ const update = async (req, res) => {
   if (birthday) {
     fieldsToUpdate.birthday = birthday;
   }
-
-  console.log(fieldsToUpdate);
 
   const result = await User.findByIdAndUpdate(_id, fieldsToUpdate, {
     new: true,
