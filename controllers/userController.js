@@ -141,6 +141,7 @@ const update = async (req, res) => {
   const { _id } = req.user;
   const { name, email, phone, skype, birthday } = req.body;
 
+
   const fieldsToUpdate = {};
 
   if (req.file) {
@@ -153,6 +154,7 @@ const update = async (req, res) => {
     if (fieldname === "avatarURL") {
       fieldsToUpdate.avatarURL = fileData.url;
     }
+
   }
 
   if (name) {
