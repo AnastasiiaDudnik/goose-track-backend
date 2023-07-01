@@ -78,7 +78,7 @@ const login = async (req, res) => {
   await User.findByIdAndUpdate(user.id, { accessToken, refreshToken });
 
   res.json({
-    token:accessToken,
+    token: accessToken,
     refreshToken,
     user: {
       id: user.id,
@@ -140,7 +140,7 @@ const getCurrent = async (req, res) => {
 const update = async (req, res) => {
   const { _id } = req.user;
   const { name, email, phone, skype, birthday } = req.body;
-  const { fieldname, path: oldPath } = req.file;
+  const { filename, path: oldPath } = req.file;
   const fileData = await cloudinary.uploader.upload(oldPath, {
     folder: "avatar",
   });
@@ -148,7 +148,7 @@ const update = async (req, res) => {
 
   const fieldsToUpdate = {};
 
-  if (fieldname === "avatarURL") {
+  if (filename) {
     fieldsToUpdate.avatarURL = fileData.url;
   }
   if (name) {
