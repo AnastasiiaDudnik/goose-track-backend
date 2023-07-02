@@ -68,7 +68,6 @@
         }
       }
     },
-
     "/users/login": {
       "post": {
         "tags": ["User"],
@@ -132,6 +131,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        }
+      }
+    },
+    "/users/update": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update user's information",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
                 }
               }
             }
@@ -591,7 +624,6 @@
           }
         }
       },
-
       "LoginRequest": {
         "type": "object",
         "required": ["email", "password"],
@@ -712,6 +744,97 @@
           "phone": null,
           "birthday": null,
           "skype": null
+        }
+      },
+      "UpdateUserRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's new name",
+            "example": "Bogdan"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's new email",
+            "example": "bogdan@gmail.com",
+            "format": "email"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's new avatar path",
+            "format": "binary",
+            "example": "Bogdan"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's new phone",
+            "example": "00 (000) 000 00 00"
+          },
+          "birthday": {
+            "type": "data",
+            "description": "User's new birthday",
+            "example": "07/03/1988"
+          },
+          "skype": {
+            "type": "string",
+            "description": "User's new skype",
+            "example": "+1234567890"
+          }
+        }
+      },
+      "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's id"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar path"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone"
+          },
+          "birthday": {
+            "type": "data",
+            "description": "User's birthday"
+          },
+          "skype": {
+            "type": "string",
+            "description": "User's skype"
+          },
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refreshToken"
+          }
+        },
+
+        "example": {
+          "_id": "64983b139dd09fca9aaa6da4",
+          "name": "Bogdan",
+          "email": "bogdan@gmail.com",          
+          "phone": "00 (000) 000 00 00",
+          "birthday": "1988-07-03T00:00:00.000Z",
+          "skype": "bogdanskype",
+          "avatarURL": "http://res.cloudinary.com/drqfmqd2m/image/upload/v1688300646/avatar/joye1xqk08otdjshltlo.jpg",      
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4ODMwMDUzNCwiZXhwIjoxNjg4MzA0MTM0fQ.Dd09QhieWWuLMcIQGOKkrTFIGpaziWU7Tig2JkAzzp0",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTgzYjEzOWRkMDlmY2E5YWFhNmRhNCIsImlhdCI6MTY4ODMwMDUzNCwiZXhwIjoxNjg4OTA1MzM0fQ.CbpkNjC5zQLVpAth0mhriN7qBY9bCJB2QEFJmxegxSM"
         }
       },
       "RefreshTokenRequest": {
@@ -973,7 +1096,6 @@
           "updatedAt": "2023-06-30T13:18:00.453Z"
         }
       },
-
       "MonthTasksRequest": {
         "type": "object",
         "required": ["date"],
