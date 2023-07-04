@@ -30,4 +30,10 @@ const joiDate = Joi.object({
   month: Joi.date().format("MM"),
 });
 
-module.exports = { joiTaskSchema, joiDate };
+const joiWeek = Joi.object({
+  years: Joi.date().format("YYYY"),
+  month: Joi.date().format("MM"),
+  day: Joi.date().format("DD"),
+});
+
+module.exports = { joiTaskSchema, joiDate, joiWeek };

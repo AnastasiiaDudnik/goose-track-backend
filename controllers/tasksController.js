@@ -16,6 +16,23 @@ const getMonthTasks = async (req, res, next) => {
     res.status(200).json({ tasks });
 };
 
+// запит за тиждень GET /tasks/week
+const getWeekTasks = async (req, res, next) => {
+    const { _id: owner } = req.user;
+
+    const {
+        years = new Date().getFullYear(),
+        month = new Date().getMonth() + 1,
+        day = new Date().getDate() } = req.query;
+
+    const startDate = new Date(years, month - 1, day).getTime();
+    const endDate = new Date(years, month - 1, Number(day) + 7).getTime() - 1000;
+
+    const tasks = await Tasks.find({ owner, date: { $gte: new Date(startDate), $lte: new Date(endDate) } });
+
+    res.status(200).json({ tasks });
+};
+
 //створення POST /tasks 
 const addTask = async (req, res) => {
     const { _id: owner } = req.user;
@@ -72,6 +89,7 @@ const removeTask = async (req, res) => {
 
 module.exports = {
     getMonthTasks: controllerWrap(getMonthTasks),
+    getWeekTasks: controllerWrap(getWeekTasks),
     addTask: controllerWrap(addTask),
     getTaskById: controllerWrap(getTaskById),
     updateTask: controllerWrap(updateTask),
