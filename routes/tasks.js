@@ -6,13 +6,15 @@ const {
     getMonthTasks,
     getTaskById,
     removeTask,
-    updateTask
+    updateTask,
+    getWeekTasks
 } = require("../controllers/tasksController");
-const { joiTaskSchema, joiDate } = require("../schemas/tasks");
+const { joiTaskSchema, joiDate, joiWeek } = require("../schemas/tasks");
 
 const router = express.Router();
 router.use(authenticate);
 
+router.get("/week", validateQuery(joiWeek), getWeekTasks);
 router.get("/:id", isValidId, getTaskById);
 router.get("/", validateQuery(joiDate), getMonthTasks);
 router.post("/", validateBody(joiTaskSchema), addTask);
