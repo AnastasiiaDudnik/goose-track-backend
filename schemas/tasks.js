@@ -26,9 +26,8 @@ const joiTaskSchema = Joi.object({
 });
 
 const joiDate = Joi.object({
-  date: Joi.date()
-    .format("YYYY-MM-DD")
-    .required(),
+  years: Joi.date().format("YYYY"),
+  month: Joi.date().format("MM"),
 });
 
 module.exports = { joiTaskSchema, joiDate };
