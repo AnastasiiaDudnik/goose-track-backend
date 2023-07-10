@@ -556,6 +556,44 @@
           }
         }
       }
+    },
+    "/tasks/statistics": {
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Get user's task statistics",
+        "parameters": [],
+        "requestBody": {
+          "description": "Statistics day object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatisticsCreationRequest"
+              }
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsCreationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "response body": "Not authorized"
+          },
+          "404": {
+            "description": "Bad request(invalid request body)"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1100,17 +1138,6 @@
           "updatedAt": "2023-06-30T13:18:00.453Z"
         }
       },
-      "MonthTasksRequest": {
-        "type": "object",
-        "required": ["date"],
-        "properties": {
-          "date": {
-            "type": "date",
-            "description": "Date must be in YYYY-MM-DD format",
-            "example": "2023-06-01"
-          }
-        }
-      },
       "MonthTasksResponse": {
         "type": "array",
         "items": {
@@ -1408,6 +1435,55 @@
           "owner": "64983b139dd09fca9aaa6da4",
           "createdAt": "2023-06-29T11:24:55.187Z",
           "updatedAt": "2023-06-30T11:27:02.276Z"
+        }
+      },
+      "StatisticsCreationRequest": {
+        "type": "object",
+        "required": ["date"],
+        "properties": {
+          "date": {
+            "type": "date",
+            "description": "User's statistics date must be in YYYY-MM-DD format",
+            "example": "2023-07-05"
+          }
+        }
+      },
+      "StatisticsCreationResponse": {
+        "type": "object",
+        "description": "User's statistics",
+        "properties": {
+          "todoByDayPercentage": {
+            "type": "string",
+            "description": "User's task day to-do statistics"
+          },
+          "inprogressByDayPercentage": {
+            "type": "string",
+            "description": "User's task day in-progress statistics"
+          },
+          "doneByDayPercentage": {
+            "type": "string",
+            "description": "User's task day done statistics"
+          },
+          "todoByMonthPercentage": {
+            "type": "string",
+            "description": "User's task month to-do statistics"
+          },
+          "inprogressByMonthPercentage": {
+            "type": "string",
+            "description": "User's task month in-progress statistics"
+          },
+          "doneByMonthPercentage": {
+            "type": "string",
+            "description": "User's task month done statistics"
+          }
+        },
+        "example": {
+          "todoByDayPercentage": 0,
+          "inprogressByDayPercentage": 100,
+          "doneByDayPercentage": 0,
+          "todoByMonthPercentage": 46,
+          "inprogressByMonthPercentage": 15,
+          "doneByMonthPercentage": 38
         }
       }
     },
