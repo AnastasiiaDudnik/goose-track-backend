@@ -32,7 +32,7 @@
   "paths": {
     "/users/register": {
       "post": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "User registration",
         "parameters": [],
         "requestBody": {
@@ -70,7 +70,7 @@
     },
     "/users/login": {
       "post": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "Login user",
         "parameters": [],
         "requestBody": {
@@ -104,7 +104,7 @@
     },
     "/users/logout": {
       "post": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "Log out user",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -120,7 +120,7 @@
     },
     "/users/current": {
       "get": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "Get information about the current user",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -143,7 +143,7 @@
     },
     "/users/update": {
       "patch": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "Update user's information",
         "parameters": [],
         "security": [{ "Bearer": [] }],
@@ -177,7 +177,7 @@
     },
     "/users/refresh": {
       "post": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "summary": "Get new user's tokens",
         "parameters": [],
         "security": [{ "Bearer": [] }],
